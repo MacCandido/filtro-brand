@@ -127,8 +127,8 @@ export const SCORES: ScoreDefinition[] = [
   {
     id: "c2",
     numero: 2,
-    titulo: "Prioridades do trimestre",
-    pergunta: "Quantas das três metas do trimestre a demanda toca?",
+    titulo: "Metas EOS",
+    pergunta: "Quantas das três metas EOS a demanda toca?",
     opcoes: [
       { valor: 0, label: "Nenhuma das três metas" },
       { valor: 1, label: "Toca uma meta" },

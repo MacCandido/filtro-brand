@@ -52,8 +52,7 @@ export default function EstruturaPage() {
               <p className="font-medium text-ink">2. Score estratégico.</p>
               <p className="text-ash text-sm mt-1">
                 Cinco critérios. Cada um vale 0, 1 ou 2 pontos. Brand Statement
-                2034, prioridades do trimestre, 4Fs, cliente e momento, primor
-                gráfico.
+                2034, metas EOS, 4Fs, cliente e momento, primor gráfico.
               </p>
             </li>
             <li>
@@ -173,7 +172,7 @@ export default function EstruturaPage() {
 
           <div className="space-y-3">
             <h3 className="text-xs uppercase tracking-[0.25em] text-ash">
-              Prioridades do trimestre
+              Metas EOS
             </h3>
             <ul className="space-y-3">
               {METAS_Q2.map((m) => (

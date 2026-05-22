@@ -204,8 +204,8 @@ export default function Page() {
           </nav>
         </div>
         <p className="mt-4 text-sm text-ash max-w-2xl leading-relaxed">
-          Valida demandas contra o Brand Statement 2034, as metas do trimestre e
-          os 4Fs. Use durante a conversa com quem está demandando. O box da
+          Valida demandas contra o Brand Statement 2034, as metas EOS e os
+          4Fs. Use durante a conversa com quem está demandando. O box da
           direita atualiza em tempo real.
         </p>
       </header>
@@ -508,7 +508,7 @@ export default function Page() {
             </details>
             <details className="cursor-pointer">
               <summary className="uppercase tracking-wider hover:text-ink transition">
-                Metas do trimestre
+                Metas EOS
               </summary>
               <ul className="mt-2 space-y-2">
                 {METAS_Q2.map((m) => (
