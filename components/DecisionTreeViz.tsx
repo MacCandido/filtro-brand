@@ -190,7 +190,7 @@ export default function DecisionTreeViz() {
             y={990}
             w={160}
             h={140}
-            label="CANAL OFICIAL"
+            label="CANAL PÚBLICO"
             sub="Site, social, asterisco, PR, newsletter, materiais"
             kind="canalOficial"
             tall
@@ -200,7 +200,7 @@ export default function DecisionTreeViz() {
             y={990}
             w={160}
             h={140}
-            label="CANAL DIRETO"
+            label="CANAL INTERNO"
             sub="ABM, e-mail, deck comercial, conteúdo segmentado"
             kind="canalDireto"
             tall
@@ -230,8 +230,8 @@ export default function DecisionTreeViz() {
 
       {/* Legenda */}
       <div className="flex flex-wrap gap-x-5 gap-y-2 mt-6 pt-5 border-t border-line text-[10px] uppercase tracking-widest text-ash">
-        <LegendaItem cor="bg-moss" label="Canal oficial" />
-        <LegendaItem cor="bg-ink" label="Canal direto" />
+        <LegendaItem cor="bg-moss" label="Canal público" />
+        <LegendaItem cor="bg-ink" label="Canal interno" />
         <LegendaItem cor="bg-ember" label="Repassar" />
         <LegendaItem cor="bg-paper" border="border-ember" label="Recusa" />
         <LegendaItem cor="bg-paper" border="border-line" label="Decisão" />

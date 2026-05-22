@@ -31,8 +31,8 @@ export interface Diagnostico {
 }
 
 const VEREDITO_LABEL: Record<Veredito, string> = {
-  canal_oficial: "Canal oficial",
-  canal_direto: "Canal direto",
+  canal_oficial: "Canal público",
+  canal_direto: "Canal interno",
   roteia: "Repassar para outro setor",
   recusa: "Recusa formal",
   pendente: "Pendente",
@@ -81,7 +81,7 @@ export function calcularDiagnostico(estado: Estado): Diagnostico {
       gatesStatus,
       motivos,
       proximoPasso:
-        "Recusa formal com fundamento ou absorção interna sem case público. Não vai pros canais oficiais.",
+        "Recusa formal com fundamento ou absorção interna sem case público. Não vai pros canais públicos.",
       podeFinalizar: true,
     };
   }
@@ -145,7 +145,7 @@ export function calcularDiagnostico(estado: Estado): Diagnostico {
       gatesStatus,
       motivos,
       proximoPasso:
-        "Vai pro ar nos canais oficiais. Case completo: site, social, asterisco, PR, newsletter, materiais comerciais. Alinhar narrativa, disparar produção, registrar no fluxo da área.",
+        "Vai pro ar nos canais públicos. Case completo: site, social, asterisco, PR, newsletter, materiais comerciais. Alinhar narrativa, disparar produção, registrar no fluxo da área.",
       podeFinalizar: true,
     };
   }
@@ -153,7 +153,7 @@ export function calcularDiagnostico(estado: Estado): Diagnostico {
   if (scoreTotal >= 5) {
     if (c5 === 0) {
       motivos.push(
-        `Score ${scoreTotal} de 10. Sem primor gráfico para canal oficial.`
+        `Score ${scoreTotal} de 10. Sem primor gráfico para canal público.`
       );
     } else {
       motivos.push(
@@ -167,7 +167,7 @@ export function calcularDiagnostico(estado: Estado): Diagnostico {
       gatesStatus,
       motivos,
       proximoPasso:
-        "Vai por canal direto. ABM, e-mail segmentado, deck comercial, conteúdo restrito. Definir lista de envio e formato com Comercial. Não entra em Brand Publishing.",
+        "Vai por canal interno. ABM, e-mail segmentado, deck comercial, conteúdo restrito. Definir lista de envio e formato com Comercial. Não entra em Brand Publishing.",
       podeFinalizar: true,
     };
   }

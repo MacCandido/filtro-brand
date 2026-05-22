@@ -88,13 +88,13 @@ export default function EstruturaPage() {
           <Subtitulo numero="02" titulo="AS QUATRO SAÍDAS" />
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <SaidaCard
-              titulo="CANAL OFICIAL"
+              titulo="CANAL PÚBLICO"
               bg="bg-moss"
               text="text-bone"
-              descricao="Score 8 a 10, com primor gráfico mínimo. Vai pro ar nos canais oficiais. Case completo: site, social, asterisco, PR, newsletter, materiais comerciais."
+              descricao="Score 8 a 10, com primor gráfico mínimo. Vai pro ar nos canais públicos. Case completo: site, social, asterisco, PR, newsletter, materiais comerciais."
             />
             <SaidaCard
-              titulo="CANAL DIRETO"
+              titulo="CANAL INTERNO"
               bg="bg-ink"
               text="text-bone"
               descricao="Score 5 a 7, ou score alto sem primor gráfico. Vai por ABM, e-mail segmentado, deck comercial, conteúdo restrito. Não entra em Brand Publishing."

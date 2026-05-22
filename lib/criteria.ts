@@ -116,11 +116,11 @@ export const SCORES: ScoreDefinition[] = [
       { valor: 2, label: "Encarna o statement (entrega BOLD)" },
     ],
     explicacao: {
-      base: "O Brand Statement 2034 é a bússola de 10 anos. Toda ação institucional precisa testar contra ele. Pedro foi explícito: o que vai pros canais oficiais ativa essa frase.",
+      base: "O Brand Statement 2034 é a bússola de 10 anos. Toda ação institucional precisa testar contra ele. Pedro foi explícito: o que vai pros canais públicos ativa essa frase.",
       porValor: {
         0: "Sem aderência ao statement. Pontua zero no critério mais pesado da decisão.",
-        1: "Dialoga, mas não encarna. Pode ir por canal direto, não por institucional.",
-        2: "Encarna o statement. É candidato a canal oficial e a inscrição em premiação.",
+        1: "Dialoga, mas não encarna. Pode ir por canal interno, não por institucional.",
+        2: "Encarna o statement. É candidato a canal público e a inscrição em premiação.",
       },
     },
   },
@@ -183,7 +183,7 @@ export const SCORES: ScoreDefinition[] = [
       base: "O ICP do Planejamento 2025 é cliente com faturamento acima de R$ 1bi/ano em CPG ou Varejo, em momento de transformação. Cliente fora do ICP pode entrar como 'outras oportunidades', mas não vira case institucional sem momento forte.",
       porValor: {
         0: "Cliente ou momento não sustentam narrativa. Não publicizar.",
-        1: "Tem peso suficiente para canal direto e relacionamento. Não necessariamente para canal oficial.",
+        1: "Tem peso suficiente para canal interno e relacionamento. Não necessariamente para canal público.",
         2: "Cliente e momento se combinam. Material rico para PR internacional e premiação.",
       },
     },
@@ -193,7 +193,7 @@ export const SCORES: ScoreDefinition[] = [
     numero: 5,
     titulo: "Primor gráfico",
     pergunta:
-      "O ativo final terá excelência visual para canal oficial?",
+      "O ativo final terá excelência visual para canal público?",
     opcoes: [
       {
         valor: 0,
@@ -202,15 +202,15 @@ export const SCORES: ScoreDefinition[] = [
       { valor: 1, label: "Adequado, mas não memorável" },
       {
         valor: 2,
-        label: "Excelência gráfica para canal oficial",
+        label: "Excelência gráfica para canal público",
       },
     ],
     explicacao: {
-      base: "A Tátil é consultoria de design. Canal oficial só absorve o que sustenta o padrão visual da casa. Esse critério não derruba a demanda, define o canal de saída.",
+      base: "A Tátil é consultoria de design. Canal público só absorve o que sustenta o padrão visual da casa. Esse critério não derruba a demanda, define o canal de saída.",
       porValor: {
-        0: "Sem primor gráfico, o canal oficial está bloqueado. A demanda pode ir por ABM, e-mail segmentado, deck comercial, mas não vira post de Instagram nem case no site.",
-        1: "Visual funciona, mas não memorável. Canal oficial possível em contexto de volume, não em destaque.",
-        2: "Padrão visual íntegro. Canal oficial liberado.",
+        0: "Sem primor gráfico, o canal público está bloqueado. A demanda pode ir por ABM, e-mail segmentado, deck comercial, mas não vira post de Instagram nem case no site.",
+        1: "Visual funciona, mas não memorável. Canal público possível em contexto de volume, não em destaque.",
+        2: "Padrão visual íntegro. Canal público liberado.",
       },
     },
   },
