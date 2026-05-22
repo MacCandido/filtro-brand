@@ -33,7 +33,7 @@ export interface Diagnostico {
 const VEREDITO_LABEL: Record<Veredito, string> = {
   canal_oficial: "Canal oficial",
   canal_direto: "Canal direto",
-  roteia: "Roteia para outro setor",
+  roteia: "Repassar para outro setor",
   recusa: "Recusa formal",
   pendente: "Pendente",
 };

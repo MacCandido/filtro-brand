@@ -68,7 +68,7 @@ export default function EstruturaPage() {
             <PassoFluxo
               numero="1"
               titulo="Filtros eliminatórios"
-              texto="Três perguntas em ordem. Qualquer não viola o gate e leva a recusa ou roteamento. Conflito de portfólio, janela de execução, e domínio do setor."
+              texto="Três perguntas em ordem. Qualquer não viola o gate e leva a recusa ou repassamento. Conflito de portfólio, janela de execução, e domínio do setor."
             />
             <PassoFluxo
               numero="2"
@@ -77,7 +77,7 @@ export default function EstruturaPage() {
             />
             <PassoFluxo
               numero="3"
-              titulo="Veredito e roteamento"
+              titulo="Veredito e repassamento"
               texto="O score total combinado com o critério de primor gráfico determina o canal de saída. Quatro saídas possíveis."
             />
           </ol>
@@ -100,7 +100,7 @@ export default function EstruturaPage() {
               descricao="Score 5 a 7, ou score alto sem primor gráfico. Vai por ABM, e-mail segmentado, deck comercial, conteúdo restrito. Não entra em Brand Publishing."
             />
             <SaidaCard
-              titulo="ROTEAMENTO"
+              titulo="REPASSAR"
               bg="bg-ember"
               text="text-bone"
               descricao="Domínio falhou ou score 3 a 4. Demanda é legítima mas o setor competente é outro. Encaminha com nota de contexto. Brand & MKT entra só como guardrail se solicitado."

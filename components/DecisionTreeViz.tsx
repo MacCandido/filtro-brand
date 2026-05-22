@@ -70,9 +70,9 @@ export default function DecisionTreeViz() {
           />
 
           {/* Sim → RECUSA (lateral) */}
-          <Conector path="M550,180 L700,180" label="Sim" />
+          <Conector path="M550,180 L640,180" label="Sim" />
           <NodeRect
-            x={620}
+            x={640}
             y={150}
             w={160}
             h={60}
@@ -96,9 +96,9 @@ export default function DecisionTreeViz() {
           />
 
           {/* Não → RECUSA */}
-          <Conector path="M550,340 L700,340" label="Não" />
+          <Conector path="M550,340 L640,340" label="Não" />
           <NodeRect
-            x={620}
+            x={640}
             y={310}
             w={160}
             h={60}
@@ -121,14 +121,14 @@ export default function DecisionTreeViz() {
             kind="decisao"
           />
 
-          {/* Não → ROTEIA */}
-          <Conector path="M550,500 L700,500" label="Não" />
+          {/* Não → REPASSAR */}
+          <Conector path="M550,500 L640,500" label="Não" />
           <NodeRect
-            x={620}
+            x={640}
             y={470}
             w={160}
             h={60}
-            label="ROTEIA"
+            label="REPASSAR"
             kind="roteia"
             small
           />
@@ -210,7 +210,7 @@ export default function DecisionTreeViz() {
             y={990}
             w={160}
             h={140}
-            label="ROTEIA"
+            label="REPASSAR"
             sub="Encaminha para outro setor com nota de contexto"
             kind="roteia"
             tall
@@ -232,7 +232,7 @@ export default function DecisionTreeViz() {
       <div className="flex flex-wrap gap-x-5 gap-y-2 mt-6 pt-5 border-t border-line text-[10px] uppercase tracking-widest text-ash">
         <LegendaItem cor="bg-moss" label="Canal oficial" />
         <LegendaItem cor="bg-ink" label="Canal direto" />
-        <LegendaItem cor="bg-ember" label="Roteia" />
+        <LegendaItem cor="bg-ember" label="Repassar" />
         <LegendaItem cor="bg-paper" border="border-ember" label="Recusa" />
         <LegendaItem cor="bg-paper" border="border-line" label="Decisão" />
       </div>
