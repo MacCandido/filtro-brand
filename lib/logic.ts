@@ -12,6 +12,7 @@ export type Veredito =
   | "canal_direto"
   | "roteia"
   | "recusa"
+  | "avaliacao"
   | "pendente";
 
 export interface Estado {
@@ -35,6 +36,7 @@ const VEREDITO_LABEL: Record<Veredito, string> = {
   canal_direto: "Canal interno",
   roteia: "Repassar para outro setor",
   recusa: "Recusa formal",
+  avaliacao: "Avaliação manual",
   pendente: "Pendente",
 };
 
@@ -88,16 +90,16 @@ export function calcularDiagnostico(estado: Estado): Diagnostico {
 
   if (estado.gates.g2 === "nao") {
     motivos.push(
-      "Janela de execução não bate. Case envelhecido perde potência como ativo de PR e premiação."
+      "Janela de execução apertada. Demanda pode ser feita, mas a documentação precisa ser avaliada caso a caso."
     );
     return {
-      veredito: "recusa",
+      veredito: "avaliacao",
       scoreTotal: 0,
       scoreMaximo: 10,
       gatesStatus,
       motivos,
       proximoPasso:
-        "Recusa fundamentada. Sugerir alternativa se houver demanda futura com janela viável.",
+        "Avaliar com o time se faz a documentação ou não. Se sim, considerar canal interno (ABM, deck, e-mail) em vez de canal público. Para canal público, o peso narrativo precisa compensar o atraso.",
       podeFinalizar: true,
     };
   }

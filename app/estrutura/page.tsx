@@ -91,7 +91,7 @@ export default function EstruturaPage() {
 
         {/* Saídas */}
         <section>
-          <Subtitulo numero="02" titulo="AS QUATRO SAÍDAS" />
+          <Subtitulo numero="02" titulo="AS CINCO SAÍDAS" />
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <SaidaCard
               titulo="CANAL PÚBLICO"
@@ -112,11 +112,18 @@ export default function EstruturaPage() {
               descricao="Domínio falhou ou score 3 a 4. Demanda é legítima mas o setor competente é outro. Encaminha com nota de contexto. Brand & MKT entra só como guardrail se solicitado."
             />
             <SaidaCard
+              titulo="AVALIAÇÃO MANUAL"
+              bg="bg-paper"
+              text="text-ink"
+              borderClass="border border-ash"
+              descricao="Janela apertada. Não é recusa automática. Avaliar com o time se faz a documentação. Se sim, considerar canal interno em vez de público."
+            />
+            <SaidaCard
               titulo="RECUSA"
               bg="bg-paper"
               text="text-ink"
               borderClass="border border-ember"
-              descricao="Gate violado ou score 0 a 2. Resposta com fundamento explicando quais critérios não foram atendidos. Sugere alternativa quando houver."
+              descricao="Conflito de portfólio insuperável ou score 0 a 2. Resposta com fundamento explicando quais critérios não foram atendidos. Sugere alternativa quando houver."
             />
           </div>
         </section>

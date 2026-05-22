@@ -69,13 +69,13 @@ export const GATES: GateDefinition[] = [
       "Conseguimos entregar com o cliente até a data de lançamento dele, em no máximo 2 meses entre kick-off e ar?",
     opcoes: [
       { valor: "sim", label: "Sim, a janela bate", interpretacao: "passa" },
-      { valor: "nao", label: "Não bate", interpretacao: "bloqueia" },
+      { valor: "nao", label: "Não bate", interpretacao: "intermediario" },
     ],
     explicacao: {
-      base: "Case envelhecido não vira ativo de PR nem entra em premiação internacional. A Meta 2 do EOS (Posicionamento Digital) exige cases vivos para gerar lead qualificado.",
+      base: "Case envelhecido perde potência como ativo de PR e premiação. A Meta 2 do EOS (Posicionamento Digital) prefere cases vivos. Quando a janela aperta, a decisão de documentar passa por avaliação manual.",
       porValor: {
         sim: "Janela viável. Segue.",
-        nao: "Natura Ecos é a referência citada pela Luiza. Super relevante na época, hoje não vira mais case. Recusa fundamentada.",
+        nao: "Não é recusa automática. Avaliar com o time se faz a documentação. Se for feita, considerar canal interno em vez de público.",
       },
     },
   },

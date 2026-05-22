@@ -95,15 +95,15 @@ export default function DecisionTreeViz() {
             kind="decisao"
           />
 
-          {/* Não → RECUSA */}
+          {/* Não → AVALIAR */}
           <Conector path="M550,340 L640,340" label="Não" />
           <NodeRect
             x={640}
             y={310}
             w={160}
             h={60}
-            label="RECUSA"
-            kind="recusa"
+            label="AVALIAR"
+            kind="avaliacao"
             small
           />
 
@@ -234,6 +234,7 @@ export default function DecisionTreeViz() {
         <LegendaItem cor="bg-ink" label="Canal interno" />
         <LegendaItem cor="bg-ember" label="Repassar" />
         <LegendaItem cor="bg-paper" border="border-ember" label="Recusa" />
+        <LegendaItem cor="bg-paper" border="border-ash" label="Avaliar" />
         <LegendaItem cor="bg-paper" border="border-line" label="Decisão" />
       </div>
     </div>
@@ -264,7 +265,8 @@ function NodeRect({
     | "recusa"
     | "roteia"
     | "canalOficial"
-    | "canalDireto";
+    | "canalDireto"
+    | "avaliacao";
   small?: boolean;
   tall?: boolean;
 }) {
@@ -313,6 +315,12 @@ function NodeRect({
       stroke: "#0a0a0a",
       text: "#f5f2ec",
       subText: "rgba(245,242,236,.7)",
+    },
+    avaliacao: {
+      fill: "#faf8f4",
+      stroke: "#6b6b6b",
+      text: "#0a0a0a",
+      subText: "#6b6b6b",
     },
   };
   const s = styles[kind];

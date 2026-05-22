@@ -21,7 +21,7 @@ import {
   salvarDemanda,
   carregarDemanda,
   removerDemanda,
-  baixarComoJson,
+  baixarComoPdf,
   DemandaSalva,
 } from "@/lib/storage";
 
@@ -182,6 +182,11 @@ export default function Page() {
       text: "text-bone",
       accent: "text-ember",
     },
+    avaliacao: {
+      bg: "bg-paper",
+      text: "text-ink",
+      accent: "text-ash",
+    },
     pendente: {
       bg: "bg-paper",
       text: "text-ink",
@@ -239,11 +244,6 @@ export default function Page() {
           <br />
           TREE
         </h1>
-        <p className="mt-6 text-sm text-ink/70 max-w-2xl leading-relaxed">
-          Valida demandas contra o Brand Statement 2034, as metas EOS e os 4Fs.
-          Use durante a conversa com quem está demandando. O painel da direita
-          atualiza em tempo real.
-        </p>
       </header>
 
       {/* PAINEL DE HISTÓRICO */}
@@ -277,7 +277,7 @@ export default function Page() {
                     key={d.id}
                     demanda={d}
                     onAbrir={() => abrir(d)}
-                    onBaixar={() => baixarComoJson(d)}
+                    onBaixar={() => baixarComoPdf(d)}
                     onRemover={() => remover(d.id)}
                   />
                 ))}
@@ -743,6 +743,7 @@ function HistoricoCard({
     canal_direto: "bg-ink text-bone",
     roteia: "bg-ember text-bone",
     recusa: "bg-ink/90 text-bone",
+    avaliacao: "bg-paper text-ink border border-ash/40",
     pendente: "bg-ash/20 text-ink",
   };
   return (
