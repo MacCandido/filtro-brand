@@ -2,16 +2,70 @@
 @tailwind components;
 @tailwind utilities;
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Cormorant+Garamond:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
 
 html, body {
   background: #f5f2ec;
   color: #0a0a0a;
-  font-family: 'Inter', system-ui, sans-serif;
+  font-family: 'Space Grotesk', system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 ::selection {
   background: #0a0a0a;
   color: #f5f2ec;
+}
+
+/* scrollbar discreta na paleta clara */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(10,10,10,.18);
+  border-radius: 8px;
+  border: 2px solid #f5f2ec;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(10,10,10,.32);
+}
+
+/* helpers */
+.glass-light {
+  background: rgba(255,255,255,.45);
+  backdrop-filter: blur(20px) saturate(160%);
+  -webkit-backdrop-filter: blur(20px) saturate(160%);
+}
+
+.glass-dock {
+  background: rgba(255,255,255,.55);
+  backdrop-filter: blur(28px) saturate(160%) brightness(1.04);
+  -webkit-backdrop-filter: blur(28px) saturate(160%) brightness(1.04);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.85),
+    inset 0 -.5px 0 rgba(10,10,10,.04),
+    0 8px 24px rgba(10,10,10,.06),
+    0 18px 44px rgba(10,10,10,.04);
+}
+
+.lift {
+  transition: transform .2s cubic-bezier(.4,0,.2,1),
+              box-shadow .2s cubic-bezier(.4,0,.2,1),
+              background .18s ease,
+              border-color .18s ease,
+              color .18s ease;
+}
+.lift:hover {
+  transform: translateY(-2px);
+}
+.lift-strong {
+  transition: transform .24s cubic-bezier(.4,0,.2,1),
+              box-shadow .24s cubic-bezier(.4,0,.2,1);
+}
+.lift-strong:hover {
+  transform: translateY(-4px);
 }

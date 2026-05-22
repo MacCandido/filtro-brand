@@ -157,326 +157,333 @@ export default function Page() {
     Object.values(gates).some((v) => v !== null) ||
     Object.values(scores).some((v) => v !== null);
 
-  const vereditoCor: Record<string, string> = {
-    canal_oficial: "bg-moss text-bone",
-    canal_direto: "bg-ink text-bone",
-    roteia: "bg-ember text-bone",
-    recusa: "bg-ink text-bone border border-ember",
-    pendente: "bg-bone text-ink border border-ash/30",
+  const vereditoStyles: Record<
+    string,
+    { bg: string; text: string; accent: string }
+  > = {
+    canal_oficial: {
+      bg: "bg-moss",
+      text: "text-bone",
+      accent: "text-bone/70",
+    },
+    canal_direto: {
+      bg: "bg-ink",
+      text: "text-bone",
+      accent: "text-bone/70",
+    },
+    roteia: {
+      bg: "bg-ember",
+      text: "text-bone",
+      accent: "text-bone/80",
+    },
+    recusa: {
+      bg: "bg-ink",
+      text: "text-bone",
+      accent: "text-ember",
+    },
+    pendente: {
+      bg: "bg-paper",
+      text: "text-ink",
+      accent: "text-ash",
+    },
   };
 
+  const vereditoStyle = vereditoStyles[diagnostico.veredito];
+
   return (
-    <main className="min-h-screen px-6 py-10 md:px-12 md:py-14">
-      <header className="mx-auto max-w-7xl mb-10">
-        <div className="flex items-baseline justify-between flex-wrap gap-4">
-          <div>
-            <p className="text-xs uppercase tracking-[0.25em] text-ash mb-2">
-              Brand, Marketing & Comunicação
-            </p>
-            <h1 className="font-serif text-4xl md:text-5xl text-ink leading-tight">
-              Filtro de demandas
-            </h1>
-          </div>
-          <nav className="flex items-center gap-6 text-xs uppercase tracking-wider">
-            <button
+    <main className="min-h-screen pb-20">
+      {/* DOCK NAV */}
+      <div className="sticky top-0 z-50 px-4 pt-4 pb-2">
+        <nav className="mx-auto max-w-7xl glass-dock rounded-2xl px-5 py-3 flex items-center justify-between gap-4 flex-wrap">
+          <Link href="/" className="flex items-baseline gap-3">
+            <span className="font-display text-2xl tracking-wide text-ink">
+              FILTRO
+            </span>
+            <span className="text-[10px] uppercase tracking-widest text-ash">
+              Brand & MKT · Tátil
+            </span>
+          </Link>
+          <div className="flex items-center gap-2">
+            <DockButton
               onClick={() => setHistoricoAberto((v) => !v)}
-              className="text-ash hover:text-ink transition border-b border-transparent hover:border-ink pb-0.5"
+              active={historicoAberto}
             >
-              Histórico ({historico.length})
-            </button>
-            <Link
-              href="/estrutura"
-              className="text-ash hover:text-ink transition border-b border-transparent hover:border-ink pb-0.5"
-            >
-              Como funciona
-            </Link>
-            <button
-              onClick={novoFiltro}
-              disabled={!temAlgo}
-              className={`transition border-b border-transparent pb-0.5 ${
-                temAlgo
-                  ? "text-ash hover:text-ink hover:border-ink"
-                  : "text-ash/40 cursor-not-allowed"
-              }`}
-            >
-              Novo filtro
-            </button>
-          </nav>
-        </div>
-        <p className="mt-4 text-sm text-ash max-w-2xl leading-relaxed">
-          Valida demandas contra o Brand Statement 2034, as metas EOS e os
-          4Fs. Use durante a conversa com quem está demandando. O box da
-          direita atualiza em tempo real.
+              Histórico
+              {historico.length > 0 && (
+                <span className="ml-1.5 inline-flex items-center justify-center min-w-[18px] h-[18px] px-1 rounded-full bg-ink text-bone text-[9px] font-bold">
+                  {historico.length}
+                </span>
+              )}
+            </DockButton>
+            <DockLink href="/estrutura">Como funciona</DockLink>
+            <DockButton onClick={novoFiltro} disabled={!temAlgo}>
+              Novo
+            </DockButton>
+          </div>
+        </nav>
+      </div>
+
+      {/* HEADER */}
+      <header className="mx-auto max-w-7xl px-6 md:px-10 pt-10 pb-12">
+        <p className="text-[10px] uppercase tracking-widest text-ash mb-3">
+          Decision tree · entrada de demandas
+        </p>
+        <h1 className="font-display text-6xl md:text-8xl leading-[.95] text-ink tracking-wide">
+          FILTRO DE
+          <br />
+          DEMANDAS
+        </h1>
+        <p className="mt-6 text-sm text-ink/70 max-w-2xl leading-relaxed">
+          Valida demandas contra o Brand Statement 2034, as metas EOS e os 4Fs.
+          Use durante a conversa com quem está demandando. O painel da direita
+          atualiza em tempo real.
         </p>
       </header>
 
       {/* PAINEL DE HISTÓRICO */}
       {historicoAberto && (
-        <div className="mx-auto max-w-7xl mb-10 bg-ink/[0.03] border border-ash/20 p-6">
-          <div className="flex items-baseline justify-between mb-4">
-            <h2 className="font-serif text-2xl text-ink">Demandas salvas</h2>
-            <button
-              onClick={() => setHistoricoAberto(false)}
-              className="text-xs uppercase tracking-wider text-ash hover:text-ink"
-            >
-              Fechar
-            </button>
+        <section className="mx-auto max-w-7xl px-6 md:px-10 mb-12">
+          <div className="bg-paper border border-line rounded-2xl p-6 shadow-card">
+            <div className="flex items-baseline justify-between mb-5">
+              <div>
+                <p className="text-[10px] uppercase tracking-widest text-ash mb-1">
+                  Demandas salvas
+                </p>
+                <h2 className="font-display text-3xl tracking-wide text-ink">
+                  HISTÓRICO
+                </h2>
+              </div>
+              <button
+                onClick={() => setHistoricoAberto(false)}
+                className="text-[10px] uppercase tracking-wider text-ash hover:text-ink transition lift"
+              >
+                Fechar
+              </button>
+            </div>
+            {historico.length === 0 ? (
+              <p className="text-sm text-ash py-6 text-center">
+                Nenhuma demanda salva ainda. Use "Salvar" no painel direito.
+              </p>
+            ) : (
+              <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+                {historico.map((d) => (
+                  <HistoricoCard
+                    key={d.id}
+                    demanda={d}
+                    onAbrir={() => abrir(d)}
+                    onBaixar={() => baixarComoJson(d)}
+                    onRemover={() => remover(d.id)}
+                  />
+                ))}
+              </ul>
+            )}
           </div>
-          {historico.length === 0 ? (
-            <p className="text-sm text-ash">
-              Nenhuma demanda salva ainda. Clique em "Salvar" no fim do
-              questionário para guardar o filtro atual.
-            </p>
-          ) : (
-            <ul className="divide-y divide-ash/15">
-              {historico.map((d) => (
-                <li
-                  key={d.id}
-                  className="py-3 flex flex-wrap items-baseline gap-3 justify-between"
-                >
-                  <div className="flex-1 min-w-0">
-                    <p className="text-ink font-medium truncate">
-                      {d.nome || "Sem nome"}
-                    </p>
-                    <p className="text-xs text-ash mt-0.5">
-                      {d.solicitante || "Sem solicitante"} ·{" "}
-                      {vereditoLabel(d.diagnostico.veredito)} · Score{" "}
-                      {d.diagnostico.scoreTotal}/{d.diagnostico.scoreMaximo} ·{" "}
-                      {new Date(d.atualizadoEm).toLocaleDateString("pt-BR", {
-                        day: "2-digit",
-                        month: "2-digit",
-                        year: "2-digit",
-                      })}
-                    </p>
-                  </div>
-                  <div className="flex items-center gap-3 text-xs uppercase tracking-wider">
-                    <button
-                      onClick={() => abrir(d)}
-                      className="text-ink hover:text-ember transition"
-                    >
-                      Abrir
-                    </button>
-                    <button
-                      onClick={() => baixarComoJson(d)}
-                      className="text-ash hover:text-ink transition"
-                    >
-                      Baixar
-                    </button>
-                    <button
-                      onClick={() => remover(d.id)}
-                      className="text-ash hover:text-ember transition"
-                    >
-                      Remover
-                    </button>
-                  </div>
-                </li>
-              ))}
-            </ul>
-          )}
-        </div>
+        </section>
       )}
 
-      <div className="mx-auto max-w-7xl grid grid-cols-1 lg:grid-cols-[1fr_1fr] gap-8 lg:gap-12">
-        {/* COLUNA ESQUERDA — QUESTIONÁRIO */}
-        <section className="space-y-10">
-          {/* Identificação da demanda */}
-          <div className="space-y-4">
-            <h2 className="font-serif text-2xl text-ink">A demanda</h2>
-            <div className="space-y-3">
-              <input
-                type="text"
+      <div className="mx-auto max-w-7xl px-6 md:px-10 grid grid-cols-1 lg:grid-cols-[1fr_1fr] gap-10 lg:gap-14">
+        {/* COLUNA ESQUERDA */}
+        <section className="space-y-12">
+          {/* Identificação */}
+          <Bloco titulo="A DEMANDA" subtitulo="Identificação básica">
+            <div className="space-y-4">
+              <Input
                 value={nome}
-                onChange={(e) => setNome(e.target.value)}
+                onChange={setNome}
                 placeholder="Nome da demanda"
-                className="w-full bg-transparent border-b border-ash/40 focus:border-ink py-2 text-ink placeholder:text-ash/60 outline-none transition"
               />
-              <input
-                type="text"
+              <Input
                 value={solicitante}
-                onChange={(e) => setSolicitante(e.target.value)}
+                onChange={setSolicitante}
                 placeholder="Quem está demandando"
-                className="w-full bg-transparent border-b border-ash/40 focus:border-ink py-2 text-ink placeholder:text-ash/60 outline-none transition"
               />
-              <textarea
+              <Textarea
                 value={descricao}
-                onChange={(e) => setDescricao(e.target.value)}
+                onChange={setDescricao}
                 placeholder="Descrição breve"
-                rows={2}
-                className="w-full bg-transparent border-b border-ash/40 focus:border-ink py-2 text-ink placeholder:text-ash/60 outline-none transition resize-none"
               />
             </div>
-          </div>
+          </Bloco>
 
           {/* GATES */}
-          <div className="space-y-6">
-            <div className="flex items-baseline justify-between">
-              <h2 className="font-serif text-2xl text-ink">
-                Filtros eliminatórios
-              </h2>
+          <Bloco
+            titulo="FILTROS"
+            subtitulo="Eliminatórios"
+            acao={
               <button
                 onClick={limparGates}
-                className="text-xs uppercase tracking-wider text-ash hover:text-ink transition"
+                className="text-[10px] uppercase tracking-wider text-ash hover:text-ember transition"
               >
                 Limpar
               </button>
-            </div>
-            {GATES.map((g) => {
-              const respostaAtual = gates[g.id];
-              return (
-                <div
-                  key={g.id}
-                  className="space-y-3"
-                  onMouseEnter={() => setHoverGate(g.id)}
-                  onMouseLeave={() => setHoverGate(null)}
-                >
-                  <h3 className="text-ink font-medium">{g.titulo}</h3>
-                  <p className="text-sm text-ash leading-relaxed">
-                    {g.pergunta}
-                  </p>
-                  <div className="flex flex-col gap-2">
-                    {g.opcoes.map((op) => {
-                      const ativo = respostaAtual === op.valor;
-                      return (
-                        <button
-                          key={op.valor}
-                          onClick={() => escolherGate(g.id, op.valor)}
-                          className={`text-left text-sm py-2 px-3 border transition ${
-                            ativo
-                              ? "border-ink bg-ink text-bone"
-                              : "border-ash/30 text-ink hover:border-ink"
-                          }`}
-                        >
-                          {op.label}
-                        </button>
-                      );
-                    })}
-                  </div>
-                  {g.id === "g3" && respostaAtual === "nao" && (
-                    <div className="pt-2">
-                      <label className="text-xs uppercase tracking-wider text-ash">
-                        Setor de destino
-                      </label>
-                      <select
-                        value={setor}
-                        onChange={(e) => setSetor(e.target.value)}
-                        className="w-full bg-transparent border-b border-ash/40 focus:border-ink py-2 text-ink outline-none mt-1"
-                      >
-                        <option value="">Selecionar setor</option>
-                        {SETORES.map((s) => (
-                          <option key={s} value={s}>
-                            {s}
-                          </option>
-                        ))}
-                      </select>
+            }
+          >
+            <div className="space-y-7">
+              {GATES.map((g) => {
+                const respostaAtual = gates[g.id];
+                return (
+                  <div
+                    key={g.id}
+                    className="space-y-3"
+                    onMouseEnter={() => setHoverGate(g.id)}
+                    onMouseLeave={() => setHoverGate(null)}
+                  >
+                    <h3 className="font-display text-2xl tracking-wide text-ink">
+                      {g.titulo.toUpperCase()}
+                    </h3>
+                    <p className="text-sm text-ink/70 leading-relaxed">
+                      {g.pergunta}
+                    </p>
+                    <div className="flex flex-col gap-2 pt-1">
+                      {g.opcoes.map((op) => {
+                        const ativo = respostaAtual === op.valor;
+                        return (
+                          <OptionButton
+                            key={op.valor}
+                            ativo={ativo}
+                            onClick={() => escolherGate(g.id, op.valor)}
+                          >
+                            {op.label}
+                          </OptionButton>
+                        );
+                      })}
                     </div>
-                  )}
-                </div>
-              );
-            })}
-          </div>
+                    {g.id === "g3" && respostaAtual === "nao" && (
+                      <div className="pt-3">
+                        <label className="text-[10px] uppercase tracking-widest text-ash block mb-2">
+                          Setor de destino
+                        </label>
+                        <select
+                          value={setor}
+                          onChange={(e) => setSetor(e.target.value)}
+                          className="w-full bg-paper border border-line focus:border-ink rounded-lg py-2.5 px-3 text-ink text-sm outline-none transition shadow-card"
+                        >
+                          <option value="">Selecionar setor</option>
+                          {SETORES.map((s) => (
+                            <option key={s} value={s}>
+                              {s}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          </Bloco>
 
           {/* SCORE */}
-          <div className="space-y-6">
-            <div className="flex items-baseline justify-between">
-              <h2 className="font-serif text-2xl text-ink">
-                Score estratégico
-              </h2>
+          <Bloco
+            titulo="SCORE"
+            subtitulo="Estratégico"
+            acao={
               <button
                 onClick={limparScores}
-                className="text-xs uppercase tracking-wider text-ash hover:text-ink transition"
+                className="text-[10px] uppercase tracking-wider text-ash hover:text-ember transition"
               >
                 Limpar
               </button>
-            </div>
-            {SCORES.map((s) => {
-              const respostaAtual = scores[s.id];
-              return (
-                <div
-                  key={s.id}
-                  className="space-y-3"
-                  onMouseEnter={() => setHoverScore(s.id)}
-                  onMouseLeave={() => setHoverScore(null)}
-                >
-                  <h3 className="text-ink font-medium">{s.titulo}</h3>
-                  <p className="text-sm text-ash leading-relaxed">
-                    {s.pergunta}
-                  </p>
-                  <div className="flex flex-col gap-2">
-                    {s.opcoes.map((op) => {
-                      const ativo = respostaAtual === op.valor;
-                      return (
-                        <button
-                          key={op.valor}
-                          onClick={() => escolherScore(s.id, op.valor)}
-                          className={`text-left text-sm py-2 px-3 border transition flex items-center gap-3 ${
-                            ativo
-                              ? "border-ink bg-ink text-bone"
-                              : "border-ash/30 text-ink hover:border-ink"
-                          }`}
-                        >
-                          <span className="font-mono text-xs">{op.valor}</span>
-                          <span>{op.label}</span>
-                        </button>
-                      );
-                    })}
+            }
+          >
+            <div className="space-y-7">
+              {SCORES.map((s) => {
+                const respostaAtual = scores[s.id];
+                return (
+                  <div
+                    key={s.id}
+                    className="space-y-3"
+                    onMouseEnter={() => setHoverScore(s.id)}
+                    onMouseLeave={() => setHoverScore(null)}
+                  >
+                    <h3 className="font-display text-2xl tracking-wide text-ink">
+                      {s.titulo.toUpperCase()}
+                    </h3>
+                    <p className="text-sm text-ink/70 leading-relaxed">
+                      {s.pergunta}
+                    </p>
+                    <div className="flex flex-col gap-2 pt-1">
+                      {s.opcoes.map((op) => {
+                        const ativo = respostaAtual === op.valor;
+                        return (
+                          <OptionButton
+                            key={op.valor}
+                            ativo={ativo}
+                            onClick={() => escolherScore(s.id, op.valor)}
+                            leading={
+                              <span className="font-mono text-[10px] tracking-wider opacity-70">
+                                {op.valor}
+                              </span>
+                            }
+                          >
+                            {op.label}
+                          </OptionButton>
+                        );
+                      })}
+                    </div>
                   </div>
-                </div>
-              );
-            })}
-          </div>
+                );
+              })}
+            </div>
+          </Bloco>
 
-          <p className="text-xs text-ash/70">
+          <p className="text-[11px] text-ash/80 italic">
             Clique novamente na resposta selecionada para desfazer.
           </p>
         </section>
 
-        {/* COLUNA DIREITA — BOX DIAGNÓSTICO */}
-        <aside className="lg:sticky lg:top-10 lg:self-start space-y-6">
-          {/* Veredito */}
+        {/* COLUNA DIREITA */}
+        <aside className="lg:sticky lg:top-28 lg:self-start space-y-5">
+          {/* VEREDITO — capa */}
           <div
-            className={`p-6 ${vereditoCor[diagnostico.veredito]} transition-colors`}
+            className={`${vereditoStyle.bg} ${vereditoStyle.text} rounded-2xl p-7 shadow-veredito transition-colors relative overflow-hidden`}
           >
-            <p className="text-xs uppercase tracking-[0.25em] opacity-70 mb-2">
+            <div className="absolute top-0 left-[14%] right-[14%] h-px bg-gradient-to-r from-transparent via-bone/40 to-transparent" />
+            <p
+              className={`text-[10px] uppercase tracking-widest ${vereditoStyle.accent} mb-2`}
+            >
               Veredito
             </p>
-            <p className="font-serif text-3xl leading-tight">
-              {vereditoLabel(diagnostico.veredito)}
+            <p className="font-display text-5xl md:text-6xl leading-[.92] tracking-wide">
+              {vereditoLabel(diagnostico.veredito).toUpperCase()}
             </p>
-            <div className="mt-4 flex items-end gap-4">
+            <div className="mt-6 flex items-end justify-between">
               <div>
-                <p className="text-xs uppercase tracking-wider opacity-70">
+                <p
+                  className={`text-[10px] uppercase tracking-widest ${vereditoStyle.accent} mb-1`}
+                >
                   Score
                 </p>
-                <p className="font-mono text-2xl mt-1">
+                <p className="font-display text-4xl tracking-wide">
                   {diagnostico.scoreTotal}
-                  <span className="opacity-50 text-base">
-                    {" "}
-                    / {diagnostico.scoreMaximo}
+                  <span className="opacity-50 text-2xl">
+                    /{diagnostico.scoreMaximo}
                   </span>
                 </p>
               </div>
-              <div className="flex gap-1.5 mb-1">
-                {diagnostico.gatesStatus.map((g) => (
+              <div className="flex gap-1.5 mb-1.5">
+                {diagnostico.gatesStatus.map((g, i) => (
                   <div
                     key={g.id}
-                    className={`w-3 h-3 rounded-full ${
+                    className={`w-2.5 h-2.5 rounded-full ${
                       g.status === "passa"
                         ? "bg-bone"
                         : g.status === "bloqueia"
                           ? "bg-ember"
                           : g.status === "intermediario"
                             ? "bg-bone/50"
-                            : "bg-bone/20 border border-bone/40"
+                            : "bg-bone/15 border border-bone/30"
                     }`}
+                    title={`Filtro ${i + 1}: ${g.status}`}
                   />
                 ))}
               </div>
             </div>
           </div>
 
-          {/* Explicação contextual */}
-          <div className="bg-ink/[0.03] border border-ash/20 p-5">
-            <p className="text-xs uppercase tracking-[0.25em] text-ash mb-3">
+          {/* ORIENTAÇÃO CONTEXTUAL */}
+          <div className="bg-paper border border-line rounded-2xl p-5 shadow-card">
+            <p className="text-[10px] uppercase tracking-widest text-ash mb-3">
               {hoverGate
                 ? `Orientação · ${GATES.find((g) => g.id === hoverGate)?.titulo}`
                 : hoverScore
@@ -496,70 +503,57 @@ export default function Page() {
             )}
           </div>
 
-          {/* Orientação dobrável */}
-          <div className="text-xs text-ash space-y-3 leading-relaxed">
-            <details className="cursor-pointer">
-              <summary className="uppercase tracking-wider hover:text-ink transition">
-                Brand Statement 2034
-              </summary>
-              <p className="mt-2 italic text-ink/80 font-serif text-base leading-relaxed">
+          {/* REFERÊNCIAS DOBRÁVEIS */}
+          <div className="space-y-2">
+            <Referencia titulo="Brand Statement 2034">
+              <p className="italic font-display text-base leading-snug tracking-wide text-ink/85">
                 {BRAND_STATEMENT}
               </p>
-            </details>
-            <details className="cursor-pointer">
-              <summary className="uppercase tracking-wider hover:text-ink transition">
-                Metas EOS
-              </summary>
-              <ul className="mt-2 space-y-2">
+            </Referencia>
+            <Referencia titulo="Metas EOS">
+              <ul className="space-y-2.5">
                 {METAS_Q2.map((m) => (
-                  <li key={m.numero} className="text-ink/80">
-                    <span className="font-medium">
+                  <li key={m.numero} className="text-ink/80 leading-relaxed">
+                    <span className="font-semibold text-ink">
                       Meta {m.numero}. {m.titulo}.
                     </span>{" "}
                     {m.descricao}
                   </li>
                 ))}
               </ul>
-            </details>
-            <details className="cursor-pointer">
-              <summary className="uppercase tracking-wider hover:text-ink transition">
-                4Fs
-              </summary>
-              <ul className="mt-2 space-y-1">
+            </Referencia>
+            <Referencia titulo="Os 4Fs">
+              <ul className="space-y-1.5">
                 {QUATRO_FS.map((f) => (
                   <li key={f.letra} className="text-ink/80">
-                    <span className="font-medium">{f.letra}.</span>{" "}
+                    <span className="font-semibold text-ink">{f.letra}.</span>{" "}
                     {f.descricao}
                   </li>
                 ))}
               </ul>
-            </details>
+            </Referencia>
           </div>
 
-          {/* Ações */}
-          <div className="pt-2 grid grid-cols-2 gap-3">
+          {/* AÇÕES */}
+          <div className="grid grid-cols-2 gap-3 pt-1">
             <button
               onClick={salvar}
               disabled={!temAlgo}
-              className={`py-3 px-4 text-sm uppercase tracking-wider transition ${
+              className={`lift py-3.5 px-4 rounded-xl text-[11px] uppercase tracking-widest font-semibold shadow-pill ${
                 temAlgo
-                  ? "border border-ink text-ink hover:bg-ink hover:text-bone"
-                  : "border border-ash/30 text-ash/50 cursor-not-allowed"
+                  ? "bg-paper text-ink border border-ink/15 hover:border-ink"
+                  : "bg-paper/50 text-ash/50 border border-line cursor-not-allowed"
               }`}
             >
-              {salvoFlash
-                ? "Salvo"
-                : idAtual
-                  ? "Atualizar"
-                  : "Salvar"}
+              {salvoFlash ? "Salvo" : idAtual ? "Atualizar" : "Salvar"}
             </button>
             <button
               onClick={copiarResposta}
               disabled={!diagnostico.podeFinalizar}
-              className={`py-3 px-4 text-sm uppercase tracking-wider transition ${
+              className={`lift py-3.5 px-4 rounded-xl text-[11px] uppercase tracking-widest font-semibold shadow-pill ${
                 diagnostico.podeFinalizar
                   ? "bg-ink text-bone hover:bg-ember"
-                  : "bg-ash/20 text-ash cursor-not-allowed"
+                  : "bg-ash/15 text-ash cursor-not-allowed"
               }`}
             >
               {textoCopiado ? "Copiado" : "Copiar resposta"}
@@ -568,19 +562,258 @@ export default function Page() {
         </aside>
       </div>
 
-      <footer className="mx-auto max-w-7xl mt-20 pt-6 border-t border-ash/20 flex items-baseline justify-between flex-wrap gap-2">
-        <p className="text-xs text-ash">
-          Histórico salvo localmente neste navegador. Em breve sincronizado em
-          nuvem.
+      <footer className="mx-auto max-w-7xl px-6 md:px-10 mt-24 pt-6 border-t border-line flex items-baseline justify-between flex-wrap gap-2">
+        <p className="text-[10px] uppercase tracking-widest text-ash">
+          Histórico salvo localmente · Em breve sincronizado em nuvem
         </p>
         <Link
           href="/estrutura"
-          className="text-xs text-ash hover:text-ink transition uppercase tracking-wider"
+          className="text-[10px] uppercase tracking-widest text-ash hover:text-ink transition"
         >
-          Ver fluxo da árvore
+          Ver fluxo da árvore →
         </Link>
       </footer>
     </main>
+  );
+}
+
+/* ────────── COMPONENTES ────────── */
+
+function DockButton({
+  children,
+  onClick,
+  active,
+  disabled,
+}: {
+  children: React.ReactNode;
+  onClick: () => void;
+  active?: boolean;
+  disabled?: boolean;
+}) {
+  return (
+    <button
+      onClick={onClick}
+      disabled={disabled}
+      className={`lift px-3.5 py-2 rounded-lg text-[10px] uppercase tracking-widest font-semibold transition ${
+        disabled
+          ? "text-ash/40 cursor-not-allowed"
+          : active
+            ? "bg-ink text-bone"
+            : "bg-paper/60 text-ink hover:bg-paper border border-line"
+      }`}
+    >
+      {children}
+    </button>
+  );
+}
+
+function DockLink({
+  children,
+  href,
+}: {
+  children: React.ReactNode;
+  href: string;
+}) {
+  return (
+    <Link
+      href={href}
+      className="lift px-3.5 py-2 rounded-lg text-[10px] uppercase tracking-widest font-semibold text-ink bg-paper/60 hover:bg-paper border border-line transition"
+    >
+      {children}
+    </Link>
+  );
+}
+
+function Bloco({
+  titulo,
+  subtitulo,
+  acao,
+  children,
+}: {
+  titulo: string;
+  subtitulo?: string;
+  acao?: React.ReactNode;
+  children: React.ReactNode;
+}) {
+  return (
+    <div>
+      <div className="flex items-baseline justify-between mb-5">
+        <div>
+          {subtitulo && (
+            <p className="text-[10px] uppercase tracking-widest text-ash mb-1">
+              {subtitulo}
+            </p>
+          )}
+          <h2 className="font-display text-3xl tracking-wide text-ink">
+            {titulo}
+          </h2>
+        </div>
+        {acao}
+      </div>
+      {children}
+    </div>
+  );
+}
+
+function Input({
+  value,
+  onChange,
+  placeholder,
+}: {
+  value: string;
+  onChange: (v: string) => void;
+  placeholder: string;
+}) {
+  return (
+    <input
+      type="text"
+      value={value}
+      onChange={(e) => onChange(e.target.value)}
+      placeholder={placeholder}
+      className="w-full bg-paper border border-line focus:border-ink rounded-xl py-3 px-4 text-ink placeholder:text-ash/60 outline-none transition shadow-card text-sm"
+    />
+  );
+}
+
+function Textarea({
+  value,
+  onChange,
+  placeholder,
+}: {
+  value: string;
+  onChange: (v: string) => void;
+  placeholder: string;
+}) {
+  return (
+    <textarea
+      value={value}
+      onChange={(e) => onChange(e.target.value)}
+      placeholder={placeholder}
+      rows={2}
+      className="w-full bg-paper border border-line focus:border-ink rounded-xl py-3 px-4 text-ink placeholder:text-ash/60 outline-none transition resize-none shadow-card text-sm"
+    />
+  );
+}
+
+function OptionButton({
+  ativo,
+  onClick,
+  leading,
+  children,
+}: {
+  ativo: boolean;
+  onClick: () => void;
+  leading?: React.ReactNode;
+  children: React.ReactNode;
+}) {
+  return (
+    <button
+      onClick={onClick}
+      className={`lift text-left text-sm py-3 px-4 rounded-xl flex items-center gap-3 ${
+        ativo
+          ? "bg-ink text-bone shadow-veredito"
+          : "bg-paper border border-line text-ink hover:border-ink shadow-card hover:shadow-cardHover"
+      }`}
+    >
+      {leading}
+      <span className="flex-1">{children}</span>
+    </button>
+  );
+}
+
+function HistoricoCard({
+  demanda,
+  onAbrir,
+  onBaixar,
+  onRemover,
+}: {
+  demanda: DemandaSalva;
+  onAbrir: () => void;
+  onBaixar: () => void;
+  onRemover: () => void;
+}) {
+  const cor: Record<string, string> = {
+    canal_oficial: "bg-moss text-bone",
+    canal_direto: "bg-ink text-bone",
+    roteia: "bg-ember text-bone",
+    recusa: "bg-ink/90 text-bone",
+    pendente: "bg-ash/20 text-ink",
+  };
+  return (
+    <li className="lift bg-bone border border-line rounded-xl p-4 shadow-card hover:shadow-cardHover cursor-pointer group" onClick={onAbrir}>
+      <div className="flex items-start justify-between gap-3 mb-3">
+        <span
+          className={`text-[9px] uppercase tracking-wider font-bold py-1 px-2 rounded ${cor[demanda.diagnostico.veredito]}`}
+        >
+          {vereditoLabel(demanda.diagnostico.veredito)}
+        </span>
+        <span className="font-mono text-[10px] text-ash tabular-nums">
+          {demanda.diagnostico.scoreTotal}/{demanda.diagnostico.scoreMaximo}
+        </span>
+      </div>
+      <h3 className="font-display text-2xl tracking-wide text-ink leading-tight mb-1.5 truncate">
+        {(demanda.nome || "Sem nome").toUpperCase()}
+      </h3>
+      <p className="text-[11px] text-ash mb-3">
+        {demanda.solicitante || "Sem solicitante"} ·{" "}
+        {new Date(demanda.atualizadoEm).toLocaleDateString("pt-BR", {
+          day: "2-digit",
+          month: "2-digit",
+          year: "2-digit",
+        })}
+      </p>
+      <div className="flex items-center gap-3 text-[10px] uppercase tracking-wider opacity-0 group-hover:opacity-100 transition">
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            onAbrir();
+          }}
+          className="text-ink hover:text-ember font-semibold"
+        >
+          Abrir
+        </button>
+        <span className="text-line">·</span>
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            onBaixar();
+          }}
+          className="text-ash hover:text-ink"
+        >
+          Baixar
+        </button>
+        <span className="text-line">·</span>
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            onRemover();
+          }}
+          className="text-ash hover:text-ember"
+        >
+          Remover
+        </button>
+      </div>
+    </li>
+  );
+}
+
+function Referencia({
+  titulo,
+  children,
+}: {
+  titulo: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <details className="bg-paper border border-line rounded-xl shadow-card group">
+      <summary className="cursor-pointer px-4 py-3 flex items-center justify-between text-[10px] uppercase tracking-widest font-semibold text-ink hover:text-ember transition list-none">
+        {titulo}
+        <span className="text-ash group-open:rotate-90 transition-transform">
+          ›
+        </span>
+      </summary>
+      <div className="px-4 pb-4 text-sm">{children}</div>
+    </details>
   );
 }
 
@@ -597,8 +830,8 @@ function ExplicacaoGate({
     <div className="space-y-3 text-sm leading-relaxed">
       <p className="text-ink/80">{g.explicacao.base}</p>
       {resposta && g.explicacao.porValor[resposta] && (
-        <div className="pt-2 border-t border-ash/15">
-          <p className="text-xs uppercase tracking-wider text-ash mb-1.5">
+        <div className="pt-3 border-t border-line">
+          <p className="text-[10px] uppercase tracking-widest text-ash mb-1.5">
             Sua resposta
           </p>
           <p className="text-ink">{g.explicacao.porValor[resposta]}</p>
@@ -621,8 +854,8 @@ function ExplicacaoScore({
     <div className="space-y-3 text-sm leading-relaxed">
       <p className="text-ink/80">{s.explicacao.base}</p>
       {resposta !== null && (
-        <div className="pt-2 border-t border-ash/15">
-          <p className="text-xs uppercase tracking-wider text-ash mb-1.5">
+        <div className="pt-3 border-t border-line">
+          <p className="text-[10px] uppercase tracking-widest text-ash mb-1.5">
             Pontuação {resposta} de 2
           </p>
           <p className="text-ink">{s.explicacao.porValor[resposta]}</p>
@@ -640,16 +873,15 @@ function DiagnosticoGeral({
   if (diagnostico.veredito === "pendente") {
     return (
       <p className="text-sm text-ink/70 leading-relaxed">
-        Responda os filtros eliminatórios e os critérios de score para gerar o
-        veredito. Passe o mouse sobre cada item à esquerda para ver a
-        orientação completa.
+        Responda os filtros e os critérios de score para gerar o veredito. Passe
+        o mouse sobre cada item à esquerda para ver a orientação completa.
       </p>
     );
   }
   return (
     <div className="space-y-3 text-sm leading-relaxed">
       <div>
-        <p className="text-xs uppercase tracking-wider text-ash mb-1.5">
+        <p className="text-[10px] uppercase tracking-widest text-ash mb-2">
           Fundamentação
         </p>
         <ul className="space-y-1.5">
@@ -660,8 +892,8 @@ function DiagnosticoGeral({
           ))}
         </ul>
       </div>
-      <div className="pt-3 border-t border-ash/15">
-        <p className="text-xs uppercase tracking-wider text-ash mb-1.5">
+      <div className="pt-3 border-t border-line">
+        <p className="text-[10px] uppercase tracking-widest text-ash mb-2">
           Próximo passo
         </p>
         <p className="text-ink">{diagnostico.proximoPasso}</p>
