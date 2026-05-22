@@ -6,6 +6,7 @@ import {
   METAS_Q2,
   BRAND_STATEMENT,
 } from "@/lib/criteria";
+import DecisionTreeViz from "@/components/DecisionTreeViz";
 
 export const metadata = {
   title: "Como funciona — Filtro de Demandas Tátil",
@@ -51,6 +52,15 @@ export default function EstruturaPage() {
       </header>
 
       <article className="mx-auto max-w-4xl px-6 md:px-10 space-y-20">
+        {/* Fluxograma visual */}
+        <section>
+          <Subtitulo numero="00" titulo="A ÁRVORE" />
+          <DecisionTreeViz />
+          <p className="text-[11px] text-ash mt-4 italic">
+            Em telas menores, role o diagrama horizontalmente.
+          </p>
+        </section>
+
         {/* O fluxo */}
         <section>
           <Subtitulo numero="01" titulo="O FLUXO" />
