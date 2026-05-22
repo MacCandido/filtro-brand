@@ -2,6 +2,7 @@
 
 import { useMemo, useState, useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import {
   GATES,
   SCORES,
@@ -195,10 +196,15 @@ export default function Page() {
       {/* DOCK NAV */}
       <div className="sticky top-0 z-50 px-4 pt-4 pb-2">
         <nav className="mx-auto max-w-7xl glass-dock rounded-2xl px-5 py-3 flex items-center justify-between gap-4 flex-wrap">
-          <Link href="/" className="flex items-baseline gap-3">
-            <span className="font-display text-2xl tracking-wide text-ink">
-              FILTRO
-            </span>
+          <Link href="/" className="flex items-center gap-3">
+            <Image
+              src="/tatil-symbol.png"
+              alt="Tátil"
+              width={32}
+              height={32}
+              className="w-8 h-8"
+              priority
+            />
             <span className="text-[10px] uppercase tracking-widest text-ash">
               Brand & MKT · Tátil
             </span>
@@ -226,12 +232,12 @@ export default function Page() {
       {/* HEADER */}
       <header className="mx-auto max-w-7xl px-6 md:px-10 pt-10 pb-12">
         <p className="text-[10px] uppercase tracking-widest text-ash mb-3">
-          Decision tree · entrada de demandas
+          Entrada de demandas · Brand & MKT
         </p>
         <h1 className="font-display text-6xl md:text-8xl leading-[.95] text-ink tracking-wide">
-          FILTRO DE
+          DECISION
           <br />
-          DEMANDAS
+          TREE
         </h1>
         <p className="mt-6 text-sm text-ink/70 max-w-2xl leading-relaxed">
           Valida demandas contra o Brand Statement 2034, as metas EOS e os 4Fs.
