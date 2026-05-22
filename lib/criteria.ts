@@ -97,7 +97,7 @@ export const GATES: GateDefinition[] = [
       base: "Os Issues 1 e 2 do EOS apontam falta de recurso e clareza de fluxo. Demanda fora de escopo dilui foco e atrasa o que é prioridade do quarter.",
       porValor: {
         sim: "Demanda no nosso terreno. Segue para o score.",
-        nao: "Encaminhar para o setor competente. Cultura e talentos vai para Renata (RH). Negócios vai para Pedro ou Olga. Produto digital vai para Digital. Execução de design vai para Design. Brand & MKT entra só como guardrail se o outro setor pedir.",
+        nao: "Repassar para o setor, equipe ou pessoa responsável.",
       },
     },
   },
