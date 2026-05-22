@@ -1,6 +1,7 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
+import Link from "next/link";
 import {
   GATES,
   SCORES,
@@ -14,6 +15,14 @@ import {
 } from "@/lib/criteria";
 import { calcularDiagnostico, vereditoLabel } from "@/lib/logic";
 import { gerarTextoResposta } from "@/lib/export";
+import {
+  listarDemandas,
+  salvarDemanda,
+  carregarDemanda,
+  removerDemanda,
+  baixarComoJson,
+  DemandaSalva,
+} from "@/lib/storage";
 
 const SETORES = [
   "RH / Cultura (Renata)",
@@ -24,41 +33,110 @@ const SETORES = [
   "Outro",
 ];
 
-export default function Page() {
-  const [nome, setNome] = useState("");
-  const [solicitante, setSolicitante] = useState("");
-  const [descricao, setDescricao] = useState("");
+const estadoInicial = {
+  nome: "",
+  solicitante: "",
+  descricao: "",
+  gates: { g1: null, g2: null, g3: null } as Record<GateId, GateAnswer>,
+  scores: { c1: null, c2: null, c3: null, c4: null, c5: null } as Record<
+    ScoreId,
+    ScoreValue
+  >,
+  setor: "",
+};
 
-  const [gates, setGates] = useState<Record<GateId, GateAnswer>>({
-    g1: null,
-    g2: null,
-    g3: null,
-  });
-  const [scores, setScores] = useState<Record<ScoreId, ScoreValue>>({
-    c1: null,
-    c2: null,
-    c3: null,
-    c4: null,
-    c5: null,
-  });
-  const [setor, setSetor] = useState<string>("");
+export default function Page() {
+  const [nome, setNome] = useState(estadoInicial.nome);
+  const [solicitante, setSolicitante] = useState(estadoInicial.solicitante);
+  const [descricao, setDescricao] = useState(estadoInicial.descricao);
+  const [gates, setGates] = useState(estadoInicial.gates);
+  const [scores, setScores] = useState(estadoInicial.scores);
+  const [setor, setSetor] = useState(estadoInicial.setor);
+
+  const [idAtual, setIdAtual] = useState<string | null>(null);
+  const [historico, setHistorico] = useState<DemandaSalva[]>([]);
+  const [historicoAberto, setHistoricoAberto] = useState(false);
 
   const [textoCopiado, setTextoCopiado] = useState(false);
+  const [salvoFlash, setSalvoFlash] = useState(false);
   const [hoverGate, setHoverGate] = useState<GateId | null>(null);
   const [hoverScore, setHoverScore] = useState<ScoreId | null>(null);
+
+  useEffect(() => {
+    setHistorico(listarDemandas());
+  }, []);
 
   const diagnostico = useMemo(
     () => calcularDiagnostico({ gates, scores }),
     [gates, scores]
   );
 
-  function resetar() {
-    setNome("");
-    setSolicitante("");
-    setDescricao("");
+  function novoFiltro() {
+    setNome(estadoInicial.nome);
+    setSolicitante(estadoInicial.solicitante);
+    setDescricao(estadoInicial.descricao);
+    setGates(estadoInicial.gates);
+    setScores(estadoInicial.scores);
+    setSetor(estadoInicial.setor);
+    setIdAtual(null);
+  }
+
+  function limparGates() {
     setGates({ g1: null, g2: null, g3: null });
-    setScores({ c1: null, c2: null, c3: null, c4: null, c5: null });
     setSetor("");
+  }
+
+  function limparScores() {
+    setScores({ c1: null, c2: null, c3: null, c4: null, c5: null });
+  }
+
+  function escolherGate(id: GateId, valor: Exclude<GateAnswer, null>) {
+    setGates((prev) => ({
+      ...prev,
+      [id]: prev[id] === valor ? null : valor,
+    }));
+  }
+
+  function escolherScore(id: ScoreId, valor: 0 | 1 | 2) {
+    setScores((prev) => ({
+      ...prev,
+      [id]: prev[id] === valor ? null : (valor as ScoreValue),
+    }));
+  }
+
+  function salvar() {
+    const salva = salvarDemanda(
+      {
+        nome,
+        solicitante,
+        descricao,
+        estado: { gates, scores, setorRoteamento: setor },
+        diagnostico,
+      },
+      idAtual ?? undefined
+    );
+    setIdAtual(salva.id);
+    setHistorico(listarDemandas());
+    setSalvoFlash(true);
+    setTimeout(() => setSalvoFlash(false), 2000);
+  }
+
+  function abrir(d: DemandaSalva) {
+    setNome(d.nome);
+    setSolicitante(d.solicitante);
+    setDescricao(d.descricao);
+    setGates(d.estado.gates);
+    setScores(d.estado.scores);
+    setSetor(d.estado.setorRoteamento ?? "");
+    setIdAtual(d.id);
+    setHistoricoAberto(false);
+  }
+
+  function remover(id: string) {
+    if (!confirm("Remover esta demanda do histórico?")) return;
+    removerDemanda(id);
+    setHistorico(listarDemandas());
+    if (idAtual === id) novoFiltro();
   }
 
   async function copiarResposta() {
@@ -71,6 +149,13 @@ export default function Page() {
     setTextoCopiado(true);
     setTimeout(() => setTextoCopiado(false), 2200);
   }
+
+  const temAlgo =
+    nome ||
+    solicitante ||
+    descricao ||
+    Object.values(gates).some((v) => v !== null) ||
+    Object.values(scores).some((v) => v !== null);
 
   const vereditoCor: Record<string, string> = {
     canal_oficial: "bg-moss text-bone",
@@ -92,19 +177,104 @@ export default function Page() {
               Filtro de demandas
             </h1>
           </div>
-          <button
-            onClick={resetar}
-            className="text-xs uppercase tracking-wider text-ash hover:text-ink transition border-b border-transparent hover:border-ink pb-0.5"
-          >
-            Novo filtro
-          </button>
+          <nav className="flex items-center gap-6 text-xs uppercase tracking-wider">
+            <button
+              onClick={() => setHistoricoAberto((v) => !v)}
+              className="text-ash hover:text-ink transition border-b border-transparent hover:border-ink pb-0.5"
+            >
+              Histórico ({historico.length})
+            </button>
+            <Link
+              href="/estrutura"
+              className="text-ash hover:text-ink transition border-b border-transparent hover:border-ink pb-0.5"
+            >
+              Como funciona
+            </Link>
+            <button
+              onClick={novoFiltro}
+              disabled={!temAlgo}
+              className={`transition border-b border-transparent pb-0.5 ${
+                temAlgo
+                  ? "text-ash hover:text-ink hover:border-ink"
+                  : "text-ash/40 cursor-not-allowed"
+              }`}
+            >
+              Novo filtro
+            </button>
+          </nav>
         </div>
         <p className="mt-4 text-sm text-ash max-w-2xl leading-relaxed">
-          Valida demandas contra o Brand Statement 2034, o EOS Q2 2026 e os 4Fs.
-          Use durante a conversa com quem está demandando. O box da direita
-          atualiza em tempo real e gera a resposta pronta no final.
+          Valida demandas contra o Brand Statement 2034, as metas do trimestre e
+          os 4Fs. Use durante a conversa com quem está demandando. O box da
+          direita atualiza em tempo real.
         </p>
       </header>
+
+      {/* PAINEL DE HISTÓRICO */}
+      {historicoAberto && (
+        <div className="mx-auto max-w-7xl mb-10 bg-ink/[0.03] border border-ash/20 p-6">
+          <div className="flex items-baseline justify-between mb-4">
+            <h2 className="font-serif text-2xl text-ink">Demandas salvas</h2>
+            <button
+              onClick={() => setHistoricoAberto(false)}
+              className="text-xs uppercase tracking-wider text-ash hover:text-ink"
+            >
+              Fechar
+            </button>
+          </div>
+          {historico.length === 0 ? (
+            <p className="text-sm text-ash">
+              Nenhuma demanda salva ainda. Clique em "Salvar" no fim do
+              questionário para guardar o filtro atual.
+            </p>
+          ) : (
+            <ul className="divide-y divide-ash/15">
+              {historico.map((d) => (
+                <li
+                  key={d.id}
+                  className="py-3 flex flex-wrap items-baseline gap-3 justify-between"
+                >
+                  <div className="flex-1 min-w-0">
+                    <p className="text-ink font-medium truncate">
+                      {d.nome || "Sem nome"}
+                    </p>
+                    <p className="text-xs text-ash mt-0.5">
+                      {d.solicitante || "Sem solicitante"} ·{" "}
+                      {vereditoLabel(d.diagnostico.veredito)} · Score{" "}
+                      {d.diagnostico.scoreTotal}/{d.diagnostico.scoreMaximo} ·{" "}
+                      {new Date(d.atualizadoEm).toLocaleDateString("pt-BR", {
+                        day: "2-digit",
+                        month: "2-digit",
+                        year: "2-digit",
+                      })}
+                    </p>
+                  </div>
+                  <div className="flex items-center gap-3 text-xs uppercase tracking-wider">
+                    <button
+                      onClick={() => abrir(d)}
+                      className="text-ink hover:text-ember transition"
+                    >
+                      Abrir
+                    </button>
+                    <button
+                      onClick={() => baixarComoJson(d)}
+                      className="text-ash hover:text-ink transition"
+                    >
+                      Baixar
+                    </button>
+                    <button
+                      onClick={() => remover(d.id)}
+                      className="text-ash hover:text-ember transition"
+                    >
+                      Remover
+                    </button>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+      )}
 
       <div className="mx-auto max-w-7xl grid grid-cols-1 lg:grid-cols-[1fr_1fr] gap-8 lg:gap-12">
         {/* COLUNA ESQUERDA — QUESTIONÁRIO */}
@@ -139,9 +309,17 @@ export default function Page() {
 
           {/* GATES */}
           <div className="space-y-6">
-            <h2 className="font-serif text-2xl text-ink">
-              Gates eliminatórios
-            </h2>
+            <div className="flex items-baseline justify-between">
+              <h2 className="font-serif text-2xl text-ink">
+                Filtros eliminatórios
+              </h2>
+              <button
+                onClick={limparGates}
+                className="text-xs uppercase tracking-wider text-ash hover:text-ink transition"
+              >
+                Limpar
+              </button>
+            </div>
             {GATES.map((g) => {
               const respostaAtual = gates[g.id];
               return (
@@ -151,12 +329,7 @@ export default function Page() {
                   onMouseEnter={() => setHoverGate(g.id)}
                   onMouseLeave={() => setHoverGate(null)}
                 >
-                  <div className="flex items-baseline gap-3">
-                    <span className="text-xs text-ash tabular-nums">
-                      G{g.numero}
-                    </span>
-                    <h3 className="text-ink font-medium">{g.titulo}</h3>
-                  </div>
+                  <h3 className="text-ink font-medium">{g.titulo}</h3>
                   <p className="text-sm text-ash leading-relaxed">
                     {g.pergunta}
                   </p>
@@ -166,9 +339,7 @@ export default function Page() {
                       return (
                         <button
                           key={op.valor}
-                          onClick={() =>
-                            setGates((prev) => ({ ...prev, [g.id]: op.valor }))
-                          }
+                          onClick={() => escolherGate(g.id, op.valor)}
                           className={`text-left text-sm py-2 px-3 border transition ${
                             ativo
                               ? "border-ink bg-ink text-bone"
@@ -206,7 +377,17 @@ export default function Page() {
 
           {/* SCORE */}
           <div className="space-y-6">
-            <h2 className="font-serif text-2xl text-ink">Score estratégico</h2>
+            <div className="flex items-baseline justify-between">
+              <h2 className="font-serif text-2xl text-ink">
+                Score estratégico
+              </h2>
+              <button
+                onClick={limparScores}
+                className="text-xs uppercase tracking-wider text-ash hover:text-ink transition"
+              >
+                Limpar
+              </button>
+            </div>
             {SCORES.map((s) => {
               const respostaAtual = scores[s.id];
               return (
@@ -216,12 +397,7 @@ export default function Page() {
                   onMouseEnter={() => setHoverScore(s.id)}
                   onMouseLeave={() => setHoverScore(null)}
                 >
-                  <div className="flex items-baseline gap-3">
-                    <span className="text-xs text-ash tabular-nums">
-                      C{s.numero}
-                    </span>
-                    <h3 className="text-ink font-medium">{s.titulo}</h3>
-                  </div>
+                  <h3 className="text-ink font-medium">{s.titulo}</h3>
                   <p className="text-sm text-ash leading-relaxed">
                     {s.pergunta}
                   </p>
@@ -231,12 +407,7 @@ export default function Page() {
                       return (
                         <button
                           key={op.valor}
-                          onClick={() =>
-                            setScores((prev) => ({
-                              ...prev,
-                              [s.id]: op.valor as ScoreValue,
-                            }))
-                          }
+                          onClick={() => escolherScore(s.id, op.valor)}
                           className={`text-left text-sm py-2 px-3 border transition flex items-center gap-3 ${
                             ativo
                               ? "border-ink bg-ink text-bone"
@@ -253,6 +424,10 @@ export default function Page() {
               );
             })}
           </div>
+
+          <p className="text-xs text-ash/70">
+            Clique novamente na resposta selecionada para desfazer.
+          </p>
         </section>
 
         {/* COLUNA DIREITA — BOX DIAGNÓSTICO */}
@@ -274,7 +449,10 @@ export default function Page() {
                 </p>
                 <p className="font-mono text-2xl mt-1">
                   {diagnostico.scoreTotal}
-                  <span className="opacity-50 text-base"> / {diagnostico.scoreMaximo}</span>
+                  <span className="opacity-50 text-base">
+                    {" "}
+                    / {diagnostico.scoreMaximo}
+                  </span>
                 </p>
               </div>
               <div className="flex gap-1.5 mb-1">
@@ -290,7 +468,6 @@ export default function Page() {
                             ? "bg-bone/50"
                             : "bg-bone/20 border border-bone/40"
                     }`}
-                    title={`G${diagnostico.gatesStatus.indexOf(g) + 1}: ${g.status}`}
                   />
                 ))}
               </div>
@@ -301,9 +478,9 @@ export default function Page() {
           <div className="bg-ink/[0.03] border border-ash/20 p-5">
             <p className="text-xs uppercase tracking-[0.25em] text-ash mb-3">
               {hoverGate
-                ? `Orientação — Gate ${GATES.find((g) => g.id === hoverGate)?.numero}`
+                ? `Orientação · ${GATES.find((g) => g.id === hoverGate)?.titulo}`
                 : hoverScore
-                  ? `Orientação — Critério ${SCORES.find((s) => s.id === hoverScore)?.numero}`
+                  ? `Orientação · ${SCORES.find((s) => s.id === hoverScore)?.titulo}`
                   : "Diagnóstico atual"}
             </p>
 
@@ -319,7 +496,7 @@ export default function Page() {
             )}
           </div>
 
-          {/* Lembrete de orientação */}
+          {/* Orientação dobrável */}
           <div className="text-xs text-ash space-y-3 leading-relaxed">
             <details className="cursor-pointer">
               <summary className="uppercase tracking-wider hover:text-ink transition">
@@ -331,7 +508,7 @@ export default function Page() {
             </details>
             <details className="cursor-pointer">
               <summary className="uppercase tracking-wider hover:text-ink transition">
-                Metas EOS Q2 2026
+                Metas do trimestre
               </summary>
               <ul className="mt-2 space-y-2">
                 {METAS_Q2.map((m) => (
@@ -359,33 +536,49 @@ export default function Page() {
             </details>
           </div>
 
-          {/* Ação final */}
-          <div className="pt-2">
+          {/* Ações */}
+          <div className="pt-2 grid grid-cols-2 gap-3">
+            <button
+              onClick={salvar}
+              disabled={!temAlgo}
+              className={`py-3 px-4 text-sm uppercase tracking-wider transition ${
+                temAlgo
+                  ? "border border-ink text-ink hover:bg-ink hover:text-bone"
+                  : "border border-ash/30 text-ash/50 cursor-not-allowed"
+              }`}
+            >
+              {salvoFlash
+                ? "Salvo"
+                : idAtual
+                  ? "Atualizar"
+                  : "Salvar"}
+            </button>
             <button
               onClick={copiarResposta}
               disabled={!diagnostico.podeFinalizar}
-              className={`w-full py-3 px-4 text-sm uppercase tracking-wider transition ${
+              className={`py-3 px-4 text-sm uppercase tracking-wider transition ${
                 diagnostico.podeFinalizar
                   ? "bg-ink text-bone hover:bg-ember"
                   : "bg-ash/20 text-ash cursor-not-allowed"
               }`}
             >
-              {textoCopiado
-                ? "Resposta copiada"
-                : diagnostico.podeFinalizar
-                  ? "Copiar resposta pronta"
-                  : "Aguardando preenchimento"}
+              {textoCopiado ? "Copiado" : "Copiar resposta"}
             </button>
           </div>
         </aside>
       </div>
 
-      <footer className="mx-auto max-w-7xl mt-20 pt-6 border-t border-ash/20">
+      <footer className="mx-auto max-w-7xl mt-20 pt-6 border-t border-ash/20 flex items-baseline justify-between flex-wrap gap-2">
         <p className="text-xs text-ash">
-          Construído sobre a skill <code>tatil-verbal-frame</code>. Atualizações
-          em Brand Statement, EOS ou 4Fs devem ser propagadas no arquivo{" "}
-          <code>lib/criteria.ts</code>.
+          Histórico salvo localmente neste navegador. Em breve sincronizado em
+          nuvem.
         </p>
+        <Link
+          href="/estrutura"
+          className="text-xs text-ash hover:text-ink transition uppercase tracking-wider"
+        >
+          Ver fluxo da árvore
+        </Link>
       </footer>
     </main>
   );
@@ -447,8 +640,9 @@ function DiagnosticoGeral({
   if (diagnostico.veredito === "pendente") {
     return (
       <p className="text-sm text-ink/70 leading-relaxed">
-        Responda os gates e os critérios para gerar o veredito. Passe o mouse
-        sobre cada item à esquerda para ver a orientação completa.
+        Responda os filtros eliminatórios e os critérios de score para gerar o
+        veredito. Passe o mouse sobre cada item à esquerda para ver a
+        orientação completa.
       </p>
     );
   }
